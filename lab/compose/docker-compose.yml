@@ -1,0 +1,79 @@
+# Topología del laboratorio (ver docs/arquitectura-red.md)
+#
+#   [attacker] ─ wan 10.66.0.0/24 ─ [fw] ─ dmz 10.66.10.0/24 ─ [target]
+#                                     └─── mgmt 10.66.20.0/24 ─ [admin]
+#
+# Convención de direcciones: .1 = reservada por Docker (sin uso), .2 = fw, .10 = nodo de la zona.
+#
+# Las tres redes son macvlan `internal`: cada una cuelga de su propia interfaz dummy,
+# sin bridge ni reglas iptables en el host. Así ningún tráfico entre zonas puede
+# esquivar a fw, y el lab no depende del firewall del host (Docker, k3s, br_netfilter).
+# Consecuencia: los nodos no tienen salida a Internet en runtime; todo se instala en el build.
+
+name: hns-lab
+
+x-node: &node
+  init: true
+  restart: unless-stopped
+  cap_add: [NET_ADMIN]
+
+services:
+  fw:
+    <<: *node
+    build: { context: ., dockerfile: fw/Dockerfile }
+    hostname: fw
+    sysctls:
+      net.ipv4.ip_forward: 1
+    networks:
+      wan:  { ipv4_address: 10.66.0.2,  interface_name: wan }
+      dmz:  { ipv4_address: 10.66.10.2, interface_name: dmz }
+      mgmt: { ipv4_address: 10.66.20.2, interface_name: mgmt }
+
+  attacker:
+    <<: *node
+    build: { context: ., dockerfile: attacker/Dockerfile }
+    hostname: attacker
+    environment:
+      LAB_ROUTES: 10.66.10.0/24,10.66.20.0/24
+      LAB_ROUTE_VIA: 10.66.0.2
+    networks:
+      wan: { ipv4_address: 10.66.0.10 }
+    depends_on: [fw]
+
+  target:
+    <<: *node
+    build: { context: ., dockerfile: target/Dockerfile }
+    hostname: target
+    environment:
+      LAB_DEFAULT_GW: 10.66.10.2
+    volumes:
+      - ../.secrets/admin_ed25519.pub:/lab-keys/admin_ed25519.pub:ro
+    networks:
+      dmz: { ipv4_address: 10.66.10.10 }
+    depends_on: [fw]
+
+  admin:
+    <<: *node
+    build: { context: ., dockerfile: admin/Dockerfile }
+    hostname: admin
+    environment:
+      LAB_DEFAULT_GW: 10.66.20.2
+    volumes:
+      - ../.secrets/admin_ed25519:/lab-keys/admin_ed25519:ro
+    networks:
+      mgmt: { ipv4_address: 10.66.20.10 }
+    depends_on: [fw]
+
+networks:
+  wan:
+    driver: macvlan
+    internal: true
+    ipam: { config: [{ subnet: 10.66.0.0/24 }] }
+  dmz:
+    driver: macvlan
+    internal: true
+    ipam: { config: [{ subnet: 10.66.10.0/24 }] }
+  mgmt:
+    driver: macvlan
+    internal: true
+    ipam: { config: [{ subnet: 10.66.20.0/24 }] }

@@ -8,9 +8,10 @@ COMPOSE      := docker compose -f $(COMPOSE_FILE)
 SH_FILES     := $(shell find scripts lab tests -type f -name '*.sh')
 SHELLCHECK   := docker run --rm -v "$(CURDIR):/mnt" -w /mnt koalaman/shellcheck:stable
 BATS         := docker run --rm -v "$(CURDIR):/code" -w /code bats/bats:latest
+PLANTUML     := docker run --rm -u "$(shell id -u):$(shell id -g)" -v "$(CURDIR)/diagramas:/data" -w /data plantuml/plantuml:latest
 
 .DEFAULT_GOAL := help
-.PHONY: help keys lab-up lab-down baseline harden audit test report lint
+.PHONY: help keys lab-up lab-down baseline harden audit test test-lab report lint diagram
 
 help: ## Lista los targets disponibles
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | \
@@ -39,8 +40,15 @@ audit: ## Auditoría posterior al hardening -> evidencias/despues/
 report: ## Genera la tabla comparativa antes/después
 	@echo "Pendiente: Fase E (verificación)"; exit 1
 
-test: ## Corre la batería de tests (bats)
+test: ## Corre los tests unitarios (bats)
 	$(BATS) tests
+
+test-lab: ## Verifica la topología del laboratorio levantado
+	@./tests/test-topology.sh
 
 lint: ## Analiza todos los scripts con shellcheck
 	$(SHELLCHECK) -x $(SH_FILES)
+
+diagram: ## Renderiza los diagramas PlantUML a SVG y PNG
+	$(PLANTUML) -tsvg topologia-laboratorio.puml
+	$(PLANTUML) -tpng topologia-laboratorio.puml

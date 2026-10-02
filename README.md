@@ -14,14 +14,9 @@ Surge del *Diplomado Universitario en Administración de Redes Linux con Orienta
 
 ## Topología
 
-```mermaid
-flowchart LR
-    A["attacker<br/>nmap · hydra · ssh-audit"] -- "wan 10.66.0.0/24" --- FW["fw<br/>nftables · fail2ban"]
-    FW -- "dmz 10.66.10.0/24" --- T["target<br/>Debian · SSH · HTTP"]
-    FW -- "mgmt 10.66.20.0/24" --- AD["admin<br/>único origen SSH"]
-```
+![Topología del laboratorio](diagramas/topologia-laboratorio.svg)
 
-- **Red y pentesting** → Docker Compose (`lab/compose/`).
+- **Red y pentesting** → Docker Compose (`lab/compose/`). Cada zona es una red macvlan aislada: todo tráfico entre zonas atraviesa `fw` y el lab no depende del firewall del host. Detalle en [docs/arquitectura-red.md](docs/arquitectura-red.md).
 - **Hardening de sistema operativo** (auditd, módulos de kernel, sysctl, AppArmor) → VM Vagrant (`lab/vm/`), porque un contenedor comparte el kernel del host. Dentro de un contenedor, esos controles se informan como `SKIP` en lugar de fallar.
 
 ## Uso rápido
@@ -29,11 +24,13 @@ flowchart LR
 ```bash
 make help       # lista de targets
 make lab-up     # genera claves y levanta el laboratorio
+make test-lab   # verifica ruteo, servicios y aislamiento entre zonas
 make baseline   # auditoría previa -> evidencias/antes/
 make harden     # aplica el bastionado
 make audit      # auditoría posterior -> evidencias/despues/
 make report     # comparativa antes/después
 make lint test  # shellcheck + bats (corren en contenedores)
+make diagram    # renderiza diagramas/ con PlantUML
 ```
 
 Todos los scripts de `scripts/` aceptan `--check` (default, no modifica nada) y `--apply` (aplica con backup previo). Son idempotentes.
@@ -52,7 +49,7 @@ Todos los scripts de `scripts/` aceptan `--check` (default, no modifica nada) y 
 ## Hoja de ruta
 
 - [x] Fase 0 — Esqueleto, contrato de scripts, CI
-- [ ] Fase A — Topología del laboratorio
+- [x] Fase A — Topología del laboratorio
 - [ ] Fase B — Target vulnerable y auditoría baseline
 - [ ] Fase C — Hardening de sistema operativo (VM)
 - [ ] Fase D — Filtrado de red y fail2ban

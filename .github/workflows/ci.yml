@@ -14,3 +14,19 @@ jobs:
         run: make lint
       - name: Tests (bats)
         run: make test
+
+  lab:
+    runs-on: ubuntu-latest
+    needs: quality
+    steps:
+      - uses: actions/checkout@v4
+      - name: Levantar laboratorio
+        run: make lab-up
+      - name: Verificar topología
+        run: make test-lab
+      - name: Logs ante fallo
+        if: failure()
+        run: docker compose -f lab/compose/docker-compose.yml logs
+      - name: Bajar laboratorio
+        if: always()
+        run: make lab-down

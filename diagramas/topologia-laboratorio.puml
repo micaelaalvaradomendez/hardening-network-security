@@ -1,0 +1,38 @@
+@startuml topologia-laboratorio
+title Laboratorio de Hardening Linux & Seguridad de Redes — Topología
+
+left to right direction
+skinparam defaultFontName "DejaVu Sans"
+skinparam shadowing false
+skinparam rectangle {
+  RoundCorner 12
+}
+skinparam node {
+  BackgroundColor #F7F7F9
+  BorderColor #444444
+}
+
+rectangle "Zona WAN · 10.66.0.0/24\n(no confiable)" as WAN #FDECEC {
+  node "attacker\n10.66.0.10\n——\nnmap · hydra · ssh-audit · nikto" as attacker
+}
+
+node "fw\nwan .2 · dmz .2 · mgmt .2\n——\nnftables (stateful, policy drop)\nfail2ban" as fw #E8F0FE
+
+rectangle "Zona DMZ · 10.66.10.0/24\n(servicios expuestos)" as DMZ #FFF6E0 {
+  node "target\n10.66.10.10\n——\nsshd · apache2\nscripts de bastionado" as target
+}
+
+rectangle "Zona MGMT · 10.66.20.0/24\n(administración)" as MGMT #E9F7EF {
+  node "admin\n10.66.20.10\n——\nclave SSH ed25519" as admin
+}
+
+attacker --> fw : "HTTP/80\n(reconocimiento)"
+fw --> target : "forward\npor zona"
+admin --> fw : "SSH/22\n(único origen)"
+
+note bottom of fw
+  Todo tráfico entre zonas atraviesa fw:
+  cada red es un macvlan aislado sin
+  camino alternativo por el host.
+end note
+@enduml
