@@ -1,0 +1,30 @@
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0*   Trying 10.66.10.10:21...
+* Connected to 10.66.10.10 (10.66.10.10) port 21
+< 220 (vsFTPd 3.0.5)
+> USER anonymous
+< 230 Login successful.
+> PWD
+< 257 "/" is the current directory
+* Entry path is '/'
+* Request has same path as previous transfer
+> EPSV
+* Connect data stream passively
+< 229 Entering Extended Passive Mode (|||30006|)
+* Connecting to 10.66.10.10 (10.66.10.10) port 30006
+*   Trying 10.66.10.10:30006...
+* Connected 2nd connection to 10.66.10.10 port 30006
+> TYPE A
+< 200 Switching to ASCII mode.
+> NLST
+< 150 Here comes the directory listing.
+* Maxdownload = -1
+{ [13 bytes data]
+* abort upload
+{ [0 bytes data]
+* Remembering we are in dir ""
+< 226 Directory send OK.
+100    13    0    13    0     0   4939      0 --:--:-- --:--:-- --:--:--  6500
+* Connection #0 to host 10.66.10.10 left intact
+welcome.txt

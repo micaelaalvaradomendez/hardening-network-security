@@ -1,0 +1,24 @@
+Vagrant.configure("2") do |config|
+  config.vm.box = "debian/trixie64"
+  config.vm.box_version = "13.20260519.1"
+  config.vm.hostname = "hns-debian13"
+  config.vm.synced_folder ".", "/vagrant", disabled: true
+  config.vm.synced_folder "../..", "/workspace", type: "rsync"
+
+  config.vm.provider :libvirt do |libvirt|
+    libvirt.memory = 2048
+    libvirt.cpus = 2
+  end
+
+  config.vm.provision "shell", inline: <<-SHELL
+    set -euo pipefail
+    export DEBIAN_FRONTEND=noninteractive
+    apt-get update
+    apt-get install -y --no-install-recommends \
+      apparmor apparmor-utils auditd lynis nmap openssh-server rsync ssh-audit sudo
+    getent group su-admin >/dev/null || groupadd --system su-admin
+    getent group ssh-admin >/dev/null || groupadd --system ssh-admin
+    usermod -aG sudo,su-admin,ssh-admin vagrant
+    systemctl enable --now ssh auditd apparmor apache2
+  SHELL
+end

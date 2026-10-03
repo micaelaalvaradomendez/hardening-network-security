@@ -1,0 +1,118 @@
+Starting Nmap 7.95 ( https://nmap.org ) at 2026-10-03 00:42 UTC
+Nmap scan report for 10.66.10.10
+Host is up (0.000068s latency).
+
+PORT   STATE SERVICE VERSION
+21/tcp open  ftp     vsftpd 3.0.5
+| ftp-syst: 
+|   STAT: 
+| FTP server status:
+|      Connected to 10.66.0.10
+|      Logged in as ftp
+|      TYPE: ASCII
+|      No session bandwidth limit
+|      Session timeout in seconds is 300
+|      Control connection is plain text
+|      Data connections will be plain text
+|      At session startup, client count was 4
+|      vsFTPd 3.0.5 - secure, fast, stable
+|_End of status
+| ftp-anon: Anonymous FTP login allowed (FTP code 230)
+|_-rw-r--r--    1 0        0              48 Oct 02 23:21 welcome.txt
+22/tcp open  ssh     OpenSSH 10.0p2 Debian 7+deb13u4 (protocol 2.0)
+80/tcp open  http    Apache httpd 2.4.68
+|_http-csrf: Couldn't find any CSRF vulnerabilities.
+|_http-title: Index of /
+|_http-stored-xss: Couldn't find any stored XSS vulnerabilities.
+| http-ls: Volume /
+| SIZE  TIME              FILENAME
+| -     2026-10-02 23:21  backup/
+| 38    2026-10-02 23:21  backup/notes.txt
+|_
+| http-enum: 
+|   /: Root directory w/ listing on 'apache/2.4.68 (debian)'
+|_  /backup/: Backup folder w/ directory listing
+|_http-server-header: Apache/2.4.68 (Debian)
+|_http-dombased-xss: Couldn't find any DOM based XSS.
+| http-sql-injection: 
+|   Possible sqli for queries:
+|     http://10.66.10.10:80/?C=N%3BO%3DD%27%20OR%20sqlspider
+|     http://10.66.10.10:80/?C=S%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/?C=M%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/?C=D%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/?C=N%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/?C=S%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/?C=M%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/?C=D%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/?C=N%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/?C=S%3BO%3DD%27%20OR%20sqlspider
+|     http://10.66.10.10:80/?C=M%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/?C=D%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/?C=M%3BO%3DD%27%20OR%20sqlspider
+|     http://10.66.10.10:80/?C=S%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/?C=N%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/?C=D%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/backup/?C=S%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/backup/?C=N%3BO%3DD%27%20OR%20sqlspider
+|     http://10.66.10.10:80/backup/?C=M%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/backup/?C=D%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/?C=N%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/?C=S%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/?C=M%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/?C=D%3BO%3DD%27%20OR%20sqlspider
+|     http://10.66.10.10:80/?C=N%3BO%3DD%27%20OR%20sqlspider
+|     http://10.66.10.10:80/?C=S%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/?C=M%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/?C=D%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/?C=N%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/?C=S%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/?C=M%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/?C=D%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/?C=N%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/?C=S%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/?C=M%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/?C=D%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/backup/?C=N%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/backup/?C=S%3BO%3DD%27%20OR%20sqlspider
+|     http://10.66.10.10:80/backup/?C=M%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/backup/?C=D%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/backup/?C=S%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/backup/?C=N%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/backup/?C=M%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/backup/?C=D%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/backup/?C=S%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/backup/?C=N%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/backup/?C=M%3BO%3DD%27%20OR%20sqlspider
+|     http://10.66.10.10:80/backup/?C=D%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/backup/?C=S%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/backup/?C=N%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/backup/?C=M%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/backup/?C=D%3BO%3DD%27%20OR%20sqlspider
+|     http://10.66.10.10:80/?C=N%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/?C=S%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/?C=M%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/?C=D%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/backup/?C=S%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/backup/?C=N%3BO%3DD%27%20OR%20sqlspider
+|     http://10.66.10.10:80/backup/?C=M%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/backup/?C=D%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/backup/?C=S%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/backup/?C=N%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/backup/?C=M%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/backup/?C=D%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/backup/?C=S%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/backup/?C=N%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/backup/?C=M%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/backup/?C=D%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/backup/?C=S%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/backup/?C=N%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/backup/?C=M%3BO%3DA%27%20OR%20sqlspider
+|_    http://10.66.10.10:80/backup/?C=D%3BO%3DA%27%20OR%20sqlspider
+Warning: OSScan results may be unreliable because we could not find at least 1 open and 1 closed port
+Aggressive OS guesses: Linux 4.15 - 5.19 (96%), Android 11 (Linux 4.9) (93%), Android 12 (Linux 5.4) (93%), Linux 3.8 (93%), Android 10 - 12 (Linux 4.14 - 4.19) (93%), Linux 3.2 - 4.14 (93%), Linux 5.4 - 5.10 (93%), OpenWrt 21.02 (Linux 5.4) (93%), MikroTik RouterOS 7.2 - 7.5 (Linux 5.6.3) (93%), Linux 2.6.32 - 3.10 (93%)
+No exact OS matches for host (test conditions non-ideal).
+Network Distance: 2 hops
+Service Info: Host: 10.66.10.10; OSs: Unix, Linux; CPE: cpe:/o:linux:linux_kernel
+
+OS and Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 30.39 seconds

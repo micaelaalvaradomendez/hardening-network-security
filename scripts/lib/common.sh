@@ -72,12 +72,12 @@ detect_env() {
     fi
 }
 
-# Los controles que dependen del kernel del host (auditd, módulos, sysctl kernel.*,
-# AppArmor) no son válidos dentro de un contenedor: se informan como SKIP.
+# Los controles de sistema solo se aplican dentro de una VM dedicada. Evita
+# modificar el host además de rechazar contenedores que comparten su kernel.
 require_vm() {
     local control="$1"
-    if [[ "$(detect_env)" == "container" ]]; then
-        log_skip "${control}: requiere VM (el contenedor comparte el kernel del host)"
+    if [[ "$(detect_env)" != "vm" ]]; then
+        log_skip "${control}: requiere una VM dedicada (entorno detectado: $(detect_env))"
         return 1
     fi
 }
@@ -89,6 +89,26 @@ backup_file() {
     mkdir -p "$(dirname "$dest")"
     cp -a "$path" "$dest"
     log_info "Backup: ${path} -> ${dest}"
+}
+
+ensure_line() {
+    local path="$1" line="$2"
+    if [[ -f "$path" ]] && grep -Fxq "$line" "$path"; then
+        log_ok "${path}: línea presente"
+        return 0
+    fi
+
+    HNS_CHANGES=$((HNS_CHANGES + 1))
+    if ! is_apply; then
+        log_warn "${path}: agregaría línea (correr con --apply)"
+        return 0
+    fi
+
+    backup_file "$path"
+    mkdir -p "$(dirname "$path")"
+    touch "$path"
+    printf '%s\n' "$line" >>"$path"
+    log_ok "${path}: línea agregada"
 }
 
 # Escribe el contenido de stdin en <destino> solo si difiere del actual.

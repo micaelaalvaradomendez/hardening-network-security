@@ -5,6 +5,9 @@ source /usr/local/lib/lab-net.sh
 
 lab_net_setup
 
+: "${LAB_WEAK_ROOT_PASSWORD:?LAB_WEAK_ROOT_PASSWORD must be set for this intentionally vulnerable target}"
+printf 'root:%s\n' "$LAB_WEAK_ROOT_PASSWORD" | chpasswd
+
 # Clave pública del nodo admin para el usuario operador. Se copia (no se monta directo)
 # porque sshd exige que authorized_keys pertenezca al usuario y no sea escribible por otros.
 if [[ -f /lab-keys/admin_ed25519.pub ]]; then
@@ -13,8 +16,11 @@ if [[ -f /lab-keys/admin_ed25519.pub ]]; then
 fi
 
 mkdir -p /run/sshd
+/usr/sbin/sshd -t
+apache2ctl configtest
 /usr/sbin/sshd
 apache2ctl start
-echo "[target] sshd y apache2 iniciados"
+/usr/sbin/vsftpd /etc/vsftpd.conf &
+echo "[target] sshd, apache2 y vsftpd iniciados"
 
 exec sleep infinity

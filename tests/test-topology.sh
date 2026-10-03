@@ -31,6 +31,32 @@ no_other_interfaces() {
     [[ "$count" -eq 1 ]]
 }
 
+ftp_anonymous_listing() {
+    local listing
+    listing="$(run attacker curl --fail --silent --show-error --max-time 5 --list-only \
+        --user anonymous:lab@example.invalid ftp://10.66.10.10/)"
+    grep -Fxq welcome.txt <<<"$listing"
+}
+
+apache_full_banner() {
+    local headers
+    headers="$(run attacker curl -fsSI --max-time 3 http://10.66.10.10/)"
+    grep -Eqi '^Server: Apache/[0-9].*Debian' <<<"$headers"
+}
+
+apache_directory_listing() {
+    local page
+    page="$(run attacker curl -fsS --max-time 3 http://10.66.10.10/backup/)"
+    grep -q 'notes.txt' <<<"$page"
+}
+
+hydra_finds_weak_root_password() {
+    local output
+    output="$(run attacker hydra -I -f -t 1 -l root -P /usr/local/share/hns/weak-passwords.txt \
+        ssh://10.66.10.10)"
+    grep -Fq 'password: toor' <<<"$output"
+}
+
 echo "== Ruteo entre zonas"
 check "attacker -> target (wan -> dmz)"          run attacker ping -c1 -W2 10.66.10.10
 check "attacker -> target pasa por fw"           hops_via_fw attacker 10.66.10.10 10.66.0.2
@@ -40,6 +66,10 @@ check "target -> admin (dmz -> mgmt)"            run target ping -c1 -W2 10.66.2
 echo "== Servicios del target"
 check "HTTP 80 accesible desde wan"              run attacker curl -fsS --max-time 3 -o /dev/null http://10.66.10.10/
 check "SSH con clave desde admin (operador)"     run admin ssh -o BatchMode=yes -o ConnectTimeout=3 target true
+check "FTP permite listado anónimo (solo baseline)" ftp_anonymous_listing
+check "Apache expone banner completo"              apache_full_banner
+check "Apache lista /backup/"                       apache_directory_listing
+check "Hydra encuentra la contraseña débil de root" hydra_finds_weak_root_password
 
 echo "== Aislamiento"
 check "attacker tiene una sola interfaz"         no_other_interfaces attacker

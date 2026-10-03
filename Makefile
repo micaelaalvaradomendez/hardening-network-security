@@ -11,7 +11,7 @@ BATS         := docker run --rm -v "$(CURDIR):/code" -w /code bats/bats:latest
 PLANTUML     := docker run --rm -u "$(shell id -u):$(shell id -g)" -v "$(CURDIR)/diagramas:/data" -w /data plantuml/plantuml:latest
 
 .DEFAULT_GOAL := help
-.PHONY: help keys lab-up lab-down baseline harden audit test test-lab report lint diagram
+.PHONY: help keys lab-up lab-down baseline exploit-demo vm-up vm-down vm-baseline vm-check vm-harden harden audit test test-lab report lint diagram
 
 help: ## Lista los targets disponibles
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | \
@@ -29,7 +29,25 @@ lab-down: ## Baja el laboratorio y elimina sus redes
 	$(COMPOSE) down --remove-orphans
 
 baseline: ## Auditoría previa al hardening -> evidencias/antes/
-	@echo "Pendiente: Fase B (target vulnerable y baseline)"; exit 1
+	@bash ./scripts/baseline.sh
+
+exploit-demo: ## Demostraciones acotadas: Hydra SSH y FTP anónimo
+	@bash ./scripts/exploit-demo.sh
+
+vm-up: ## Crea/levanta Debian 13 para hardening (Vagrant + libvirt)
+	cd lab/vm && vagrant up --provider=libvirt
+
+vm-down: ## Apaga la VM de hardening
+	cd lab/vm && vagrant halt
+
+vm-baseline: ## Captura baseline de la VM antes del hardening
+	@bash ./scripts/vm-baseline.sh
+
+vm-check: ## Audita controles de Fase C sin modificar la VM
+	@bash ./scripts/vm-hardening.sh --check
+
+vm-harden: ## Aplica controles de Fase C dentro de la VM
+	@bash ./scripts/vm-hardening.sh --apply
 
 harden: ## Aplica los scripts de bastionado
 	@echo "Pendiente: Fases C y D (hardening de SO y red)"; exit 1

@@ -1,0 +1,5 @@
+run_id=20261003T005000Z
+started_utc=2026-10-03T00:42:55Z
+target=10.66.10.10
+scanner=attacker (WAN lab network)
+scope=TCP ports 21,22,80 only; all scans target the fixed lab IP

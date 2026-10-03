@@ -46,6 +46,7 @@ services:
     hostname: target
     environment:
       LAB_DEFAULT_GW: 10.66.10.2
+      LAB_WEAK_ROOT_PASSWORD: toor
     volumes:
       - ../.secrets/admin_ed25519.pub:/lab-keys/admin_ed25519.pub:ro
     networks:
