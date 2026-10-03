@@ -15,7 +15,7 @@ Vagrant.configure("2") do |config|
     export DEBIAN_FRONTEND=noninteractive
     apt-get update
     apt-get install -y --no-install-recommends \
-      apparmor apparmor-utils auditd lynis nmap openssh-server rsync ssh-audit sudo
+      apache2 apparmor apparmor-utils auditd lynis nmap openssh-server rsync ssh-audit sudo
     getent group su-admin >/dev/null || groupadd --system su-admin
     getent group ssh-admin >/dev/null || groupadd --system ssh-admin
     usermod -aG sudo,su-admin,ssh-admin vagrant

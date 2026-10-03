@@ -13,6 +13,8 @@ La Fase C endurece una VM Debian 13 dedicada. No ejecutes `--apply` en el host: 
 
 La baseline crea `baseline.complete` solo cuando terminaron todas las capturas. `make vm-harden` exige esa marca en `evidencias/vm/antes/` y no acepta una ejecución parcial.
 
+El `Vagrantfile` deshabilita la carpeta compartida predeterminada `/vagrant`, que el provider libvirt intenta servir con NFS. El repo se sincroniza en una sola dirección por rsync a `/workspace`; ejecuta `vagrant rsync` antes de llamar scripts desde el host.
+
 ## Controles
 
 | Script | Controles aplicados |
