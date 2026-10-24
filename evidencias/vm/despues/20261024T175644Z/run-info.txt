@@ -1,0 +1,4 @@
+run_id=20261024T175644Z
+started_utc=2026-10-24T17:56:45Z
+vm=Debian 13 Trixie via Vagrant/libvirt
+phase=despues

@@ -63,7 +63,7 @@ Para la Fase C necesitás Vagrant, el plugin `vagrant-libvirt`, QEMU/KVM y libvi
 - [x] Fase 0 — Esqueleto, contrato de scripts, CI
 - [x] Fase A — Topología del laboratorio
 - [x] Fase B — Target vulnerable y auditoría baseline
-- [ ] Fase C — Hardening de sistema operativo (VM; implementación y validación en curso)
+- [x] Fase C — Hardening de sistema operativo (VM)
 - [ ] Fase D — Filtrado de red y fail2ban
 - [ ] Fase E — Verificación y comparativa
 - [ ] Fase F — Informe de pentesting

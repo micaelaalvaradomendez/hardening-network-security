@@ -30,10 +30,16 @@ apply_file "$APPARMOR_FILE" <<'EOF'
 /usr/sbin/apache2 flags=(attach_disconnected) {
   #include <abstractions/base>
   #include <abstractions/nameservice>
+  capability kill,
   capability net_bind_service,
+  capability setgid,
+  capability setuid,
+  signal (send, receive) peer=@{profile_name},
+  signal (send, receive) peer=unconfined,
   network inet stream,
   network inet6 stream,
   /etc/apache2/** r,
+  /etc/mime.types r,
   /etc/ssl/** r,
   /usr/sbin/apache2 mr,
   /usr/lib/**/apache2/modules/** mr,
