@@ -28,6 +28,9 @@ services:
       wan:  { ipv4_address: 10.66.0.2,  interface_name: wan }
       dmz:  { ipv4_address: 10.66.10.2, interface_name: dmz }
       mgmt: { ipv4_address: 10.66.20.2, interface_name: mgmt }
+    # Fase D: reglas de filtrado montadas de solo lectura.
+    volumes:
+      - ../../firewall/nftables.conf:/etc/nftables.conf:ro
 
   attacker:
     <<: *node

@@ -11,7 +11,7 @@ BATS         := docker run --rm -v "$(CURDIR):/code" -w /code bats/bats:latest
 PLANTUML     := docker run --rm -u "$(shell id -u):$(shell id -g)" -v "$(CURDIR)/diagramas:/data" -w /data plantuml/plantuml:latest
 
 .DEFAULT_GOAL := help
-.PHONY: help keys lab-up lab-down baseline exploit-demo vm-up vm-down vm-baseline vm-check vm-harden harden audit test test-lab report lint diagram
+.PHONY: help keys lab-up lab-down baseline exploit-demo vm-up vm-down vm-baseline vm-check vm-harden harden audit test test-lab test-fw report lint diagram
 
 help: ## Lista los targets disponibles
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | \
@@ -49,20 +49,24 @@ vm-check: ## Audita controles de Fase C sin modificar la VM
 vm-harden: ## Aplica controles de Fase C dentro de la VM
 	@bash ./scripts/vm-hardening.sh --apply
 
-harden: ## Aplica los scripts de bastionado
-	@echo "Pendiente: Fases C y D (hardening de SO y red)"; exit 1
+harden: ## Aplica hardening de red (Fase D): nftables en fw + fail2ban en target
+	@bash ./scripts/03-firewall-nftables.sh --apply
+	@bash ./scripts/06-fail2ban.sh --apply
 
-audit: ## Auditoría posterior al hardening -> evidencias/despues/
-	@echo "Pendiente: Fase E (verificación)"; exit 1
+audit: ## Auditoría posterior al hardening -> evidencias/despues/<run-id>/
+	@bash ./scripts/audit-post.sh
 
-report: ## Genera la tabla comparativa antes/después
-	@echo "Pendiente: Fase E (verificación)"; exit 1
+report: ## Genera la tabla comparativa antes/después -> evidencias/reporte.md
+	@bash ./scripts/report.sh
 
 test: ## Corre los tests unitarios (bats)
 	$(BATS) tests
 
-test-lab: ## Verifica la topología del laboratorio levantado
+test-lab: ## Verifica la topología del laboratorio levantado (estado antes de filtrado)
 	@./tests/test-topology.sh
+
+test-fw: ## Verifica el filtrado de red endurecido (Fase D)
+	@./tests/test-firewall.sh
 
 lint: ## Analiza todos los scripts con shellcheck
 	$(SHELLCHECK) -x $(SH_FILES)

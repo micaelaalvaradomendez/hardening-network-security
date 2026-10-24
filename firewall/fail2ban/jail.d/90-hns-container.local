@@ -1,0 +1,9 @@
+# Solo para el contenedor del laboratorio: no hay systemd/journald, así que sshd escribe
+# a rsyslog y fail2ban lee el archivo. Se carga después de jail.local.
+
+[DEFAULT]
+backend = polling
+
+[sshd]
+backend = polling
+logpath = /var/log/auth.log

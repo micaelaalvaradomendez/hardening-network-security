@@ -1,0 +1,24 @@
+# fail2ban para el servidor de la DMZ (ver docs/filtrado-red.md).
+#
+# Debian 12/13 no instala rsyslog ni genera /var/log/auth.log por defecto: se lee el
+# journal de systemd. El bloqueo se hace con nftables (set de IPs baneadas), no con iptables.
+# En el laboratorio Docker no hay journald; ahí aplica además jail.d/90-hns-container.local.
+
+[DEFAULT]
+backend = systemd
+banaction = nftables-multiport
+banaction_allports = nftables-allports
+
+# 3 fallos en 10 minutos -> ban de 10 minutos.
+maxretry = 3
+findtime = 10m
+bantime = 10m
+
+# Solo loopback. La estación de administración NO está exenta a propósito: si su
+# credencial se ve comprometida, también debe poder bloquearse.
+ignoreip = 127.0.0.1/8 ::1
+
+[sshd]
+enabled = true
+port = ssh
+mode = normal

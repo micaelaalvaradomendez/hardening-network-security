@@ -24,6 +24,14 @@ jobs:
         run: make lab-up
       - name: Verificar topología
         run: make test-lab
+      - name: Aplicar hardening de red (Fase D)
+        run: make harden
+      - name: Verificar filtrado endurecido
+        run: make test-fw
+      - name: Auditoría post-hardening (evidencias/despues/)
+        run: make audit
+      - name: Generar reporte antes/después
+        run: make report
       - name: Logs ante fallo
         if: failure()
         run: docker compose -f lab/compose/docker-compose.yml logs

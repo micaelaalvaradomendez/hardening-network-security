@@ -5,6 +5,10 @@ source /usr/local/lib/lab-net.sh
 
 lab_net_setup
 
+# rsyslog debe estar corriendo para que /var/log/auth.log exista y fail2ban (polling)
+# pueda leer los intentos fallidos de SSH.
+rsyslogd 2>/dev/null || true
+
 : "${LAB_WEAK_ROOT_PASSWORD:?LAB_WEAK_ROOT_PASSWORD must be set for this intentionally vulnerable target}"
 printf 'root:%s\n' "$LAB_WEAK_ROOT_PASSWORD" | chpasswd
 
@@ -17,10 +21,17 @@ fi
 
 mkdir -p /run/sshd
 /usr/sbin/sshd -t
+/usr/sbin/sshd -E /var/log/auth.log
+
 apache2ctl configtest
-/usr/sbin/sshd
 apache2ctl start
 /usr/sbin/vsftpd /etc/vsftpd.conf &
-echo "[target] sshd, apache2 y vsftpd iniciados"
+
+# fail2ban se arranca con el contenedor si su configuración está presente.
+if [[ -f /etc/fail2ban/jail.local ]]; then
+    fail2ban-client -x start 2>/dev/null || true
+fi
+
+echo "[target] sshd, apache2, vsftpd, rsyslog y fail2ban iniciados"
 
 exec sleep infinity
