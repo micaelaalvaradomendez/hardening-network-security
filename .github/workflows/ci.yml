@@ -59,8 +59,10 @@ jobs:
     needs: quality
     steps:
       - uses: actions/checkout@v4
-      - name: Instalar auditd y AppArmor en runner
-        run: sudo apt-get update -qq && sudo apt-get install -y -qq auditd apparmor apparmor-utils apache2
+      - name: Instalar auditd, AppArmor y SSH en runner
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq auditd apparmor apparmor-utils apache2 openssh-server
+          sudo mkdir -p /run/sshd
       - name: Auditar scripts de bastionado en modo --check
         run: |
           sudo bash ./scripts/01-system-hardening.sh --check

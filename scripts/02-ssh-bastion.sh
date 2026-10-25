@@ -21,8 +21,9 @@ X11Forwarding no
 AllowGroups ssh-admin
 EOF
 
-sshd -t
 if is_apply; then
+    [[ -d /run/sshd ]] || mkdir -p /run/sshd
+    sshd -t
     systemctl reload ssh
 fi
 summary

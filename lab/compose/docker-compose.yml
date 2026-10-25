@@ -25,9 +25,9 @@ services:
     sysctls:
       net.ipv4.ip_forward: 1
     networks:
-      wan:  { ipv4_address: 10.66.0.2,  interface_name: wan }
-      dmz:  { ipv4_address: 10.66.10.2, interface_name: dmz }
-      mgmt: { ipv4_address: 10.66.20.2, interface_name: mgmt }
+      wan:  { ipv4_address: 10.66.0.2 }
+      dmz:  { ipv4_address: 10.66.10.2 }
+      mgmt: { ipv4_address: 10.66.20.2 }
     # Fase D: reglas de filtrado montadas de solo lectura.
     volumes:
       - ../../firewall/nftables.conf:/etc/nftables.conf:ro
