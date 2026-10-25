@@ -11,7 +11,7 @@ BATS         := docker run --rm -v "$(CURDIR):/code" -w /code bats/bats:latest
 PLANTUML     := docker run --rm -u "$(shell id -u):$(shell id -g)" -v "$(CURDIR)/diagramas:/data" -w /data plantuml/plantuml:latest
 
 .DEFAULT_GOAL := help
-.PHONY: help keys lab-up lab-down baseline exploit-demo vm-up vm-down vm-baseline vm-check vm-harden harden audit test test-lab test-fw test-ports verify-cis report lint diagram pcap-demo fail2ban-demo
+.PHONY: help keys lab-up lab-down baseline exploit-demo vm-up vm-down vm-baseline vm-check vm-harden harden audit test test-lab test-fw test-ports test-detection verify-cis report lint diagram pcap-demo fail2ban-demo ids-apply ids-demo fim-baseline fim-demo
 
 help: ## Lista los targets disponibles
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | \
@@ -71,6 +71,9 @@ test-fw: ## Verifica el filtrado de red endurecido (Fase D)
 test-ports: ## Verifica la whitelist de puertos y disponibilidad de servicios legítimos (Fase E)
 	@./tests/test-ports.sh
 
+test-detection: ## Verifica los servicios de detección IDS (Suricata) y monitoreo FIM (AIDE) (Fase H)
+	@./tests/test-detection.sh
+
 verify-cis: ## Verifica las directivas críticas de hardening CIS implementadas (Fase E)
 	@./tests/verify-cis.sh
 
@@ -79,6 +82,18 @@ pcap-demo: ## Captura pcap demostrando reject vs drop -> evidencias/despues/reje
 
 fail2ban-demo: ## Demostración de fail2ban: fuerza bruta -> IP baneada en nftables
 	@./scripts/fail2ban-demo.sh
+
+ids-apply: ## Inicia el motor IDS Suricata con reglas de detección en fw (Fase H)
+	@bash ./scripts/07-suricata-ids.sh --apply
+
+ids-demo: ## Demostración de Suricata: escaneos sigilosos y fuerza bruta -> alertas en fast.log
+	@bash ./scripts/ids-demo.sh
+
+fim-baseline: ## Inicializa la base de hashes criptográficos AIDE en target (Fase H)
+	@bash ./scripts/08-aide-fim.sh --apply
+
+fim-demo: ## Demostración de AIDE: mutación en /etc -> reporte de integridad
+	@bash ./scripts/fim-demo.sh
 
 lint: ## Analiza todos los scripts con shellcheck
 	$(SHELLCHECK) -x $(SH_FILES)

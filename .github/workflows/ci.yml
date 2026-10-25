@@ -42,6 +42,16 @@ jobs:
         run: make test-ports
       - name: Verificar directivas CIS implementadas (Fase E)
         run: make verify-cis
+      - name: Iniciar IDS Suricata y baseline AIDE FIM (Fase H)
+        run: |
+          make ids-apply
+          make fim-baseline
+      - name: Verificar detección IDS y monitoreo FIM (Fase H)
+        run: make test-detection
+      - name: Demostración detección IDS y monitoreo FIM (Fase H)
+        run: |
+          make ids-demo
+          make fim-demo
       - name: Ejecutar auditoría post-hardening (make audit)
         run: make audit
       - name: Generar reporte comparativo antes/después
@@ -69,3 +79,5 @@ jobs:
           sudo bash ./scripts/02-ssh-bastion.sh --check
           sudo bash ./scripts/04-auditd-rules.sh --check
           sudo bash ./scripts/05-service-isolation.sh --check
+          sudo bash ./scripts/07-suricata-ids.sh --check
+          sudo bash ./scripts/08-aide-fim.sh --check

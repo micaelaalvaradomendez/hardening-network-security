@@ -1,0 +1,35 @@
+%YAML 1.1
+---
+suricata-version: "7.0"
+
+vars:
+  address-groups:
+    HOME_NET: "[10.66.10.0/24,10.66.20.0/24]"
+    EXTERNAL_NET: "!$HOME_NET"
+  port-groups:
+    HTTP_PORTS: "80"
+    SHELL_PORTS: "22"
+
+default-log-dir: /var/log/suricata
+
+stats:
+  enabled: no
+
+outputs:
+  - fast:
+      enabled: yes
+      filename: fast.log
+      append: yes
+  - eve-log:
+      enabled: yes
+      filetype: regular
+      filename: eve.json
+      types:
+        - alert
+
+pcap:
+  - interface: wan
+
+default-rule-path: /etc/suricata/rules
+rule-files:
+  - lab-detection.rules

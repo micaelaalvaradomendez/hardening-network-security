@@ -28,9 +28,11 @@ services:
       wan:  { ipv4_address: 10.66.0.2 }
       dmz:  { ipv4_address: 10.66.10.2 }
       mgmt: { ipv4_address: 10.66.20.2 }
-    # Fase D: reglas de filtrado montadas de solo lectura.
+    # Fase D y H: reglas de filtrado y detección IDS montadas de solo lectura.
     volumes:
       - ../../firewall/nftables.conf:/etc/nftables.conf:ro
+      - ../../firewall/suricata/suricata.yaml:/etc/suricata/suricata.yaml:ro
+      - ../../firewall/suricata/rules:/etc/suricata/rules:ro
 
   attacker:
     <<: *node
@@ -52,6 +54,7 @@ services:
       LAB_WEAK_ROOT_PASSWORD: toor
     volumes:
       - ../.secrets/admin_ed25519.pub:/lab-keys/admin_ed25519.pub:ro
+      - ./target/aide.conf:/etc/aide/aide.conf:ro
     networks:
       dmz: { ipv4_address: 10.66.10.10 }
     depends_on: [fw]

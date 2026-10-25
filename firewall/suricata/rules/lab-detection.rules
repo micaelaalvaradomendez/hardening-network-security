@@ -1,0 +1,10 @@
+# Reglas de Detección IDS (Suricata) - Laboratorio de Hardening & Redes
+# Mapeo a MITRE ATT&CK: T1046 (Network Service Discovery) y T1110 (Brute Force)
+
+# T1046: Escaneos TCP anómalos comúnmente usados para evadir firewalls tradicionales sin estado
+alert tcp 10.66.0.0/24 any -> 10.66.10.0/24 any (msg:"SCAN TCP Null scan detectado (MITRE T1046)"; flags:0; sid:1000001; rev:1;)
+alert tcp 10.66.0.0/24 any -> 10.66.10.0/24 any (msg:"SCAN TCP Xmas scan detectado (MITRE T1046)"; flags:FPU; sid:1000002; rev:1;)
+alert tcp 10.66.0.0/24 any -> 10.66.10.0/24 any (msg:"SCAN TCP FIN scan detectado (MITRE T1046)"; flags:F; sid:1000003; rev:1;)
+
+# T1110: Intentos reiterados de conexión SSH (fuerza bruta o dictionary attack)
+alert tcp 10.66.0.0/24 any -> 10.66.10.0/24 22 (msg:"AUTH SSH Fuerza bruta detectada (MITRE T1110)"; flow:to_server; flags:S; threshold: type both, track by_src, count 5, seconds 30; sid:1000004; rev:1;)

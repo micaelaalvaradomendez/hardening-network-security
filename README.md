@@ -4,7 +4,7 @@
 ![Debian](https://img.shields.io/badge/Debian-13-A81D33?logo=debian&logoColor=white)
 ![License](https://img.shields.io/badge/license-MIT-blue)
 
-Laboratorio reproducible de bastionado de servidores Linux y seguridad de redes: scripts Bash idempotentes con controles alineados a **CIS Debian Linux Benchmark**, filtrado stateful con **nftables**, trazabilidad con **auditd**, protección contra fuerza bruta con **fail2ban** y un **informe de pentesting ético** que mide la reducción de la superficie de ataque antes y después de la remediación.
+Laboratorio reproducible de bastionado de servidores Linux y seguridad de redes: scripts Bash idempotentes con controles alineados a **CIS Debian Linux Benchmark**, filtrado stateful con **nftables**, trazabilidad con **auditd**, protección contra fuerza bruta con **fail2ban**, **detección de intrusiones en red (NIDS)** con **Suricata**, **monitoreo de integridad de archivos (FIM)** con **AIDE** y un **informe de pentesting ético** que mide la reducción de la superficie de ataque antes y después de la remediación.
 
 Surge del *Diplomado Universitario en Administración de Redes Linux con Orientación en Ciberseguridad y Ethical Hacking* (UTN-FRD).
 
@@ -33,6 +33,11 @@ make vm-check    # audita controles sin modificar la VM
 make vm-harden   # aplica hardening en la VM (requiere baseline previa)
 make vm-down     # apaga la VM
 make harden     # aplica el bastionado
+make ids-apply  # inicia Suricata IDS en el firewall
+make ids-demo   # demostración de detección de escaneos y fuerza bruta
+make fim-baseline # inicializa base criptográfica AIDE FIM en el target
+make fim-demo   # demostración de detección de modificaciones no autorizadas
+make test-detection # verifica los servicios de detección IDS y FIM
 make audit      # auditoría posterior -> evidencias/despues/
 make report     # comparativa antes/después
 make lint test  # shellcheck + bats (corren en contenedores)
@@ -52,9 +57,9 @@ Para la Fase C necesitás Vagrant, el plugin `vagrant-libvirt`, QEMU/KVM y libvi
 | Carpeta | Contenido |
 |---|---|
 | `scripts/` | Bastionado: sistema, SSH, firewall, auditd, aislamiento de servicios. `lib/common.sh` define el contrato común. |
-| `firewall/` | `nftables.conf` y `fail2ban/jail.local`. |
-| `lab/` | Entorno reproducible: Compose (red) y Vagrant/libvirt (SO). |
-| `docs/` | Arquitectura de red, matriz de controles e informe de pentesting. |
+| `firewall/` | `nftables.conf`, `fail2ban/` y reglas de detección de `suricata/`. |
+| `lab/` | Entorno reproducible: Compose (red + AIDE FIM) y Vagrant/libvirt (SO). |
+| `docs/` | Arquitectura de red, matriz de controles, informe de pentesting y detección IDS/FIM. |
 | `evidencias/` | Salidas de Nmap, Lynis y ssh-audit antes y después. |
 | `tests/` | Batería de verificación con bats-core. |
 

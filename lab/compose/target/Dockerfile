@@ -5,7 +5,7 @@ FROM debian:trixie-slim
 RUN apt-get update \
  && apt-get install -y --no-install-recommends \
        iproute2 iputils-ping openssh-server apache2 sudo nftables procps vsftpd lynis \
-        fail2ban rsyslog \
+        fail2ban rsyslog aide \
  && rm -rf /var/lib/apt/lists/* \
  && useradd --create-home --shell /bin/bash --groups sudo operador
 

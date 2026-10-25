@@ -5,6 +5,7 @@ FROM debian:trixie-slim
 RUN apt-get update \
  && apt-get install -y --no-install-recommends \
         iproute2 nftables conntrack tcpdump iputils-ping procps \
+        suricata \
  && rm -rf /var/lib/apt/lists/*
 
 COPY common/lab-net.sh /usr/local/lib/lab-net.sh
