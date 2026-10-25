@@ -1,0 +1,6 @@
+run_id=20261025T154639Z
+started_utc=2026-10-25T15:46:39Z
+target=10.66.10.10
+scanner=attacker (WAN lab network)
+phase=despues (post-hardening)
+scope=TCP ports 21,22,80 only; all scans target the fixed lab IP

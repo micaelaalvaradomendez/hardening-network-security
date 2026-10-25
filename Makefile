@@ -11,7 +11,7 @@ BATS         := docker run --rm -v "$(CURDIR):/code" -w /code bats/bats:latest
 PLANTUML     := docker run --rm -u "$(shell id -u):$(shell id -g)" -v "$(CURDIR)/diagramas:/data" -w /data plantuml/plantuml:latest
 
 .DEFAULT_GOAL := help
-.PHONY: help keys lab-up lab-down baseline exploit-demo vm-up vm-down vm-baseline vm-check vm-harden harden audit test test-lab test-fw report lint diagram pcap-demo fail2ban-demo
+.PHONY: help keys lab-up lab-down baseline exploit-demo vm-up vm-down vm-baseline vm-check vm-harden harden audit test test-lab test-fw test-ports verify-cis report lint diagram pcap-demo fail2ban-demo
 
 help: ## Lista los targets disponibles
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | \
@@ -67,6 +67,12 @@ test-lab: ## Verifica la topología del laboratorio levantado (estado antes de f
 
 test-fw: ## Verifica el filtrado de red endurecido (Fase D)
 	@./tests/test-firewall.sh
+
+test-ports: ## Verifica la whitelist de puertos y disponibilidad de servicios legítimos (Fase E)
+	@./tests/test-ports.sh
+
+verify-cis: ## Verifica las directivas críticas de hardening CIS implementadas (Fase E)
+	@./tests/verify-cis.sh
 
 pcap-demo: ## Captura pcap demostrando reject vs drop -> evidencias/despues/reject-vs-drop.pcap
 	@./scripts/pcap-demo.sh

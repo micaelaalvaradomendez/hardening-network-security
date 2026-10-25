@@ -38,3 +38,4 @@ if command -v tcpdump >/dev/null 2>&1; then
 else
     "${COMPOSE[@]}" exec -T fw tcpdump -r "$OUTPUT_PCAP" -nn | tee "$OUTPUT_TXT"
 fi
+

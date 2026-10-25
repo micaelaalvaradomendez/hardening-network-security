@@ -82,3 +82,4 @@ run_demo() {
 }
 
 run_demo | tee "$OUTPUT_FILE"
+

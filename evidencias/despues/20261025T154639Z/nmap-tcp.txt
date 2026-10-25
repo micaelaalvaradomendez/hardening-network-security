@@ -1,0 +1,105 @@
+Starting Nmap 7.95 ( https://nmap.org ) at 2026-10-25 15:46 UTC
+Nmap scan report for 10.66.10.10
+Host is up (0.000096s latency).
+
+PORT   STATE    SERVICE VERSION
+21/tcp filtered ftp
+22/tcp filtered ssh
+80/tcp open     http    Apache httpd 2.4.69
+|_http-server-header: Apache/2.4.69 (Debian)
+| http-ls: Volume /
+| SIZE  TIME              FILENAME
+| -     2026-10-24 20:21  backup/
+| 38    2026-10-24 20:21  backup/notes.txt
+|_
+| http-enum: 
+|   /: Root directory w/ listing on 'apache/2.4.69 (debian)'
+|_  /backup/: Backup folder w/ directory listing
+| http-sql-injection: 
+|   Possible sqli for queries:
+|     http://10.66.10.10:80/?C=N%3BO%3DD%27%20OR%20sqlspider
+|     http://10.66.10.10:80/?C=D%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/?C=M%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/?C=S%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/?C=D%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/?C=M%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/?C=N%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/?C=S%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/?C=D%3BO%3DD%27%20OR%20sqlspider
+|     http://10.66.10.10:80/?C=M%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/?C=N%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/?C=S%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/backup/?C=S%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/backup/?C=M%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/backup/?C=N%3BO%3DD%27%20OR%20sqlspider
+|     http://10.66.10.10:80/backup/?C=D%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/?C=M%3BO%3DD%27%20OR%20sqlspider
+|     http://10.66.10.10:80/?C=D%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/?C=N%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/?C=S%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/?C=S%3BO%3DD%27%20OR%20sqlspider
+|     http://10.66.10.10:80/?C=D%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/?C=M%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/?C=N%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/?C=N%3BO%3DD%27%20OR%20sqlspider
+|     http://10.66.10.10:80/?C=D%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/?C=M%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/?C=S%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/?C=D%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/?C=M%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/?C=N%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/?C=S%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/backup/?C=M%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/backup/?C=N%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/backup/?C=S%3BO%3DD%27%20OR%20sqlspider
+|     http://10.66.10.10:80/backup/?C=D%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/backup/?C=S%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/backup/?C=N%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/backup/?C=M%3BO%3DD%27%20OR%20sqlspider
+|     http://10.66.10.10:80/backup/?C=D%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/backup/?C=S%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/backup/?C=M%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/backup/?C=N%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/backup/?C=D%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/backup/?C=S%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/backup/?C=D%3BO%3DD%27%20OR%20sqlspider
+|     http://10.66.10.10:80/backup/?C=N%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/backup/?C=M%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/?C=D%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/?C=M%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/?C=N%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/?C=S%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/?C=D%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/?C=M%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/?C=N%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/?C=S%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/backup/?C=S%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/backup/?C=M%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/backup/?C=N%3BO%3DD%27%20OR%20sqlspider
+|     http://10.66.10.10:80/backup/?C=D%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/backup/?C=S%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/backup/?C=M%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/backup/?C=N%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/backup/?C=D%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/backup/?C=S%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/backup/?C=M%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/backup/?C=N%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/backup/?C=D%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/backup/?C=S%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/backup/?C=M%3BO%3DA%27%20OR%20sqlspider
+|     http://10.66.10.10:80/backup/?C=N%3BO%3DA%27%20OR%20sqlspider
+|_    http://10.66.10.10:80/backup/?C=D%3BO%3DA%27%20OR%20sqlspider
+|_http-title: Index of /
+|_http-dombased-xss: Couldn't find any DOM based XSS.
+|_http-csrf: Couldn't find any CSRF vulnerabilities.
+|_http-stored-xss: Couldn't find any stored XSS vulnerabilities.
+Warning: OSScan results may be unreliable because we could not find at least 1 open and 1 closed port
+Device type: general purpose
+Running (JUST GUESSING): Linux 4.X|5.X (87%)
+OS CPE: cpe:/o:linux:linux_kernel:4 cpe:/o:linux:linux_kernel:5
+Aggressive OS guesses: Linux 4.15 - 5.19 (87%)
+No exact OS matches for host (test conditions non-ideal).
+Service Info: Host: 10.66.10.10
+
+OS and Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 33.45 seconds
