@@ -78,3 +78,4 @@ prácticas de defensa en profundidad para infraestructuras seguras.
 |---|---|---|---|---|
 | **SEC-01** | Sandboxing en systemd | Restringe privilegios de ejecución del servidor HTTP: deshabilita namespaces ajenos, restringe escritura en `/tmp` y prohíbe escalada. | Directivas `ProtectSystem=full`, `PrivateTmp=true`, `NoNewPrivileges=true` | `systemctl cat apache2` |
 | **SEC-02** | Perfil AppArmor para Apache | Limita los accesos al sistema de archivos del proceso Apache en modo `enforce`; un exploit en una aplicación web no puede leer archivos del sistema fuera del alcance autorizado. | Perfil `/etc/apparmor.d/usr.sbin.apache2` | `aa-status \| grep apache2` |
+

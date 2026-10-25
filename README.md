@@ -58,15 +58,6 @@ Para la Fase C necesitás Vagrant, el plugin `vagrant-libvirt`, QEMU/KVM y libvi
 | `evidencias/` | Salidas de Nmap, Lynis y ssh-audit antes y después. |
 | `tests/` | Batería de verificación con bats-core. |
 
-## Hoja de ruta
-
-- [x] Fase 0 — Esqueleto, contrato de scripts, CI
-- [x] Fase A — Topología del laboratorio
-- [x] Fase B — Target vulnerable y auditoría baseline
-- [x] Fase C — Hardening de sistema operativo (VM)
-- [ ] Fase D — Filtrado de red y fail2ban
-- [ ] Fase E — Verificación y comparativa
-- [ ] Fase F — Informe de pentesting
 
 ## Aviso de uso ético
 
