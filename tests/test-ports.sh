@@ -59,3 +59,4 @@ if [[ "$FAILS" -gt 0 ]]; then
     exit 1
 fi
 echo "Todas las pruebas de puertos y disponibilidad pasaron exitosamente."
+

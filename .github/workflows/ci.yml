@@ -7,30 +7,44 @@ on:
 
 jobs:
   quality:
+    name: Code Quality & Syntax
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Shellcheck
+      - name: Instalar herramientas de validación de sintaxis
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq nftables
+      - name: Validar sintaxis nftables (nft -c)
+        run: sudo nft -c -f firewall/nftables.conf
+      - name: Shellcheck (todos los scripts)
         run: make lint
-      - name: Tests (bats)
+      - name: Tests unitarios (bats)
         run: make test
 
   lab:
+    name: Docker Network Lab & Verification
     runs-on: ubuntu-latest
     needs: quality
     steps:
       - uses: actions/checkout@v4
-      - name: Levantar laboratorio
+      - name: Levantar laboratorio reproducible
         run: make lab-up
-      - name: Verificar topología
+      - name: Verificar topología y ruteo inicial (Fase A)
         run: make test-lab
       - name: Aplicar hardening de red (Fase D)
         run: make harden
-      - name: Verificar filtrado endurecido
+      - name: Verificar filtrado de firewall (Fase D)
         run: make test-fw
-      - name: Auditoría post-hardening (evidencias/despues/)
+      - name: Demostración captura pcap (reject vs drop)
+        run: make pcap-demo
+      - name: Demostración fail2ban fuerza bruta
+        run: make fail2ban-demo
+      - name: Verificar whitelist de puertos y disponibilidad (Fase E)
+        run: make test-ports
+      - name: Verificar directivas CIS implementadas (Fase E)
+        run: make verify-cis
+      - name: Ejecutar auditoría post-hardening (make audit)
         run: make audit
-      - name: Generar reporte antes/después
+      - name: Generar reporte comparativo antes/después
         run: make report
       - name: Logs ante fallo
         if: failure()
@@ -38,3 +52,18 @@ jobs:
       - name: Bajar laboratorio
         if: always()
         run: make lab-down
+
+  os-hardening-check:
+    name: OS Hardening Scripts (Dry-run en VM Runner)
+    runs-on: ubuntu-latest
+    needs: quality
+    steps:
+      - uses: actions/checkout@v4
+      - name: Instalar auditd y AppArmor en runner
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq auditd apparmor apparmor-utils apache2
+      - name: Auditar scripts de bastionado en modo --check
+        run: |
+          sudo bash ./scripts/01-system-hardening.sh --check
+          sudo bash ./scripts/02-ssh-bastion.sh --check
+          sudo bash ./scripts/04-auditd-rules.sh --check
+          sudo bash ./scripts/05-service-isolation.sh --check

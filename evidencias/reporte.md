@@ -1,6 +1,6 @@
 # Reporte de Auditoría Antes/Después — Hardening de Red y Sistemas Linux
 
-Generado: 2026-10-25T15:49:26Z UTC
+Generado: 2026-10-25T16:02:57Z UTC
 
 ## 1. Resumen de Entornos Auditados
 
