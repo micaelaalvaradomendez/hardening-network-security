@@ -21,7 +21,7 @@ fi
 
 mkdir -p /run/sshd
 /usr/sbin/sshd -t
-/usr/sbin/sshd -E /var/log/auth.log
+/usr/sbin/sshd
 
 apache2ctl configtest
 apache2ctl start

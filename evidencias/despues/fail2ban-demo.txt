@@ -1,0 +1,52 @@
+==========================================================
+DEMOSTRACIÓN DE FAIL2BAN & NFTABLES EN LA DMZ
+Fecha (UTC): 2026-10-25T15:23:38Z
+==========================================================
+
+== 1. Estado inicial: verificación de acceso legítimo desde admin
+[OK] Conexión SSH desde admin (10.66.20.10) autorizada con clave ed25519.
+
+== 2. Estado de fail2ban antes del ataque
+Status for the jail: sshd
+|- Filter
+|  |- Currently failed:	1
+|  |- Total failed:	20
+|  `- File list:	/var/log/auth.log
+`- Actions
+   |- Currently banned:	0
+   |- Total banned:	7
+   `- Banned IP list:	
+
+== 3. Lanzando ataque de fuerza bruta SSH con Hydra desde admin
+
+== 4. Estado de fail2ban tras el ataque
+Status for the jail: sshd
+|- Filter
+|  |- Currently failed:	0
+|  |- Total failed:	21
+|  `- File list:	/var/log/auth.log
+`- Actions
+   |- Currently banned:	1
+   |- Total banned:	8
+   `- Banned IP list:	10.66.20.10
+
+== 5. Reglas y sets de nftables en target (f2b-table)
+table inet f2b-table {
+	set addr-set-sshd {
+		type ipv4_addr
+		elements = { 10.66.20.10 }
+	}
+
+	chain f2b-chain {
+		type filter hook input priority filter - 1; policy accept;
+		tcp dport 22 ip saddr @addr-set-sshd reject with icmp port-unreachable
+	}
+}
+
+== 6. Verificando bloqueo de SSH desde admin
+[OK] Conexión rechazada por nftables a nivel de kernel (bloqueo efectivo).
+
+== 7. Desbaneando IP de admin para restaurar el laboratorio
+[OK] Conectividad SSH de admin restaurada exitosamente.
+
+Demostración de fail2ban completada exitosamente.

@@ -1,0 +1,3 @@
+12:23:35.481980 ?     In  IP 10.66.0.10.47860 > 10.66.10.10.22: Flags [S], seq 2745048419, win 64240, options [mss 1460,sackOK,TS val 2517049720 ecr 0,nop,wscale 10], length 0
+12:23:36.586913 ?     In  IP 10.66.20.10.55804 > 10.66.10.10.80: Flags [S], seq 679620939, win 64240, options [mss 1460,sackOK,TS val 3512577959 ecr 0,nop,wscale 10], length 0
+12:23:36.586939 ?     Out IP 10.66.20.2 > 10.66.20.10: ICMP host 10.66.10.10 unreachable - admin prohibited filter, length 68

@@ -81,25 +81,34 @@ a `/var/log/auth.log` vía rsyslog y fail2ban lee ese archivo con `backend = pol
 
 ### Demo de baneo
 Desde `admin`, `hydra` contra SSH de `target` con contraseñas erróneas activa la jail
-`sshd`; la IP se añade al set de baneados de nftables y las conexiones posteriores
-desde esa IP son descartadas.
+`sshd`; la IP se añade al set de baneados de nftables (`table inet f2b-table`) y las
+conexiones posteriores desde esa IP son rechazadas a nivel de kernel.
+Automatizado con `make fail2ban-demo` (evidencia en `evidencias/despues/fail2ban-demo.txt`).
+
+### Captura pcap: Reject vs Drop
+`make pcap-demo` ejecuta una captura con `tcpdump` en `fw` que demuestra el comportamiento
+diferencial según la zona:
+- Tráfico no autorizado desde WAN (`drop` silencioso, sin paquetes de respuesta).
+- Tráfico no autorizado desde MGMT (`reject with icmpx admin-prohibited`, respuesta ICMP inmediata).
+Evidencias generadas en `evidencias/despues/reject-vs-drop.pcap` y su decodificación en `.txt`.
 
 ## Validación
 
 ```bash
-# 1. Sintaxis de nftables (sin cargar)
+# 1. Sintaxis de nftables y linting
 make lint            # shellcheck de todos los scripts
-nft -c -f firewall/nftables.conf
+docker compose exec -T fw nft -c -f /etc/nftables.conf
 
 # 2. Levantar laboratorio y aplicar filtrado
 make lab-up
 make harden
 
-# 3. Verificar filtrado
+# 3. Verificar filtrado de red (11 tests unitarios)
 make test-fw
 
-# 4. Captura de tráfico (tcpdump en nflog:1)
-docker compose exec -T fw tcpdump -i nflog:1 -c 20 -n
+# 4. Demostraciones de Fase D
+make fail2ban-demo   # Baneo de fuerza bruta SSH en nftables
+make pcap-demo       # Captura de reject vs drop
 ```
 
 ## Archivos de Fase D
@@ -111,7 +120,9 @@ docker compose exec -T fw tcpdump -i nflog:1 -c 20 -n
 | `firewall/fail2ban/jail.d/90-hns-container.local` | Override para contenedor sin systemd |
 | `scripts/03-firewall-nftables.sh` | Carga las reglas nftables en `fw` (--check/--apply) |
 | `scripts/06-fail2ban.sh` | Instala configuración de fail2ban en `target` (--check/--apply) |
+| `scripts/fail2ban-demo.sh` | Demostración automatizada de baneo con fail2ban + nftables |
+| `scripts/pcap-demo.sh` | Demostración automatizada y captura pcap de reject vs drop |
 | `tests/test-firewall.sh` | Verificación del estado endurecido |
 | `lab/compose/fw/entrypoint.sh` | Carga nftables.conf al arrancar `fw` |
 | `lab/compose/target/Dockerfile` | Añade fail2ban y rsyslog |
-| `lab/compose/target/entrypoint.sh` | Arranca rsyslog, sshd con `-E /var/log/auth.log`, fail2ban |
+| `lab/compose/target/entrypoint.sh` | Arranca rsyslog, sshd y fail2ban |

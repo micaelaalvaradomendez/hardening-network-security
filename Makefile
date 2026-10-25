@@ -11,7 +11,7 @@ BATS         := docker run --rm -v "$(CURDIR):/code" -w /code bats/bats:latest
 PLANTUML     := docker run --rm -u "$(shell id -u):$(shell id -g)" -v "$(CURDIR)/diagramas:/data" -w /data plantuml/plantuml:latest
 
 .DEFAULT_GOAL := help
-.PHONY: help keys lab-up lab-down baseline exploit-demo vm-up vm-down vm-baseline vm-check vm-harden harden audit test test-lab test-fw report lint diagram
+.PHONY: help keys lab-up lab-down baseline exploit-demo vm-up vm-down vm-baseline vm-check vm-harden harden audit test test-lab test-fw report lint diagram pcap-demo fail2ban-demo
 
 help: ## Lista los targets disponibles
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | \
@@ -67,6 +67,12 @@ test-lab: ## Verifica la topología del laboratorio levantado (estado antes de f
 
 test-fw: ## Verifica el filtrado de red endurecido (Fase D)
 	@./tests/test-firewall.sh
+
+pcap-demo: ## Captura pcap demostrando reject vs drop -> evidencias/despues/reject-vs-drop.pcap
+	@./scripts/pcap-demo.sh
+
+fail2ban-demo: ## Demostración de fail2ban: fuerza bruta -> IP baneada en nftables
+	@./scripts/fail2ban-demo.sh
 
 lint: ## Analiza todos los scripts con shellcheck
 	$(SHELLCHECK) -x $(SH_FILES)
